@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Finance Tracker - Your Personal Finance Manager{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>💰 Finance Tracker</h1>
+    <p>Take control of your finances with our simple, powerful tracking tool. Monitor your income and expenses, visualize your financial health, and make informed decisions about your money.</p>
+
+    {% if current_user.is_authenticated %}
+        <button class="cta-button" onclick="window.location.href='{{ url_for('dashboard') }}'">
+            Go to Dashboard
+        </button>
+    {% else %}
+        <button class="cta-button" onclick="window.location.href='{{ url_for('register') }}'">
+            Start Tracking Now
+        </button>
+    {% endif %}
+
+    <div class="features">
+        <div class="feature">
+            <h3>📊 Visual Analytics</h3>
+            <p>See your income vs expenses at a glance with interactive charts and clear financial summaries.</p>
+        </div>
+        <div class="feature">
+            <h3>💳 Easy Transaction Management</h3>
+            <p>Add, categorize, and filter your transactions with our intuitive interface.</p>
+        </div>
+        <div class="feature">
+            <h3>🔒 Secure Database</h3>
+            <p>Your financial data is securely stored in an encrypted database with user authentication protection.</p>
+        </div>
+        <div class="feature">
+            <h3>🌐 Access Anywhere</h3>
+            <p>Log in from any device - desktop, tablet, or mobile - and access your data from anywhere, anytime.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
