@@ -297,6 +297,10 @@ Visit `http://127.0.0.1:5001` in your browser.
 
 ## Deployment
 
+### Live Demo
+
+The application is deployed and accessible at: [Finance Tracker Demo](https://msp3.up.railway.app/)
+
 ### Railway.app Deployment (Recommended)
 
 This project is configured for easy deployment on Railway.app with automatic PostgreSQL provisioning.
