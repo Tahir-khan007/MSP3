@@ -1,128 +1,158 @@
-{% extends "base.html" %}
-
 {% block title %}404 - Page Not Found{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <div class="error-container">
-        <h1 class="error-code">404</h1>
-        <h2 class="error-title">Page Not Found</h2>
-        <p class="error-message">
-            Oops! The page you're looking for doesn't exist.
-            It might have been moved, deleted, or the URL might be incorrect.
-        </p>
+<div class="error-container">
+    <div class="error-icon">💸</div>
+    <h1 class="error-code">404</h1>
+    <h2 class="error-message">Oops! Page Not Found</h2>
+    <p class="error-description">
+        The page you're looking for seems to have gone missing. It might have been moved, deleted, or perhaps it never existed.
+        Let's get you back on track with your finances!
+    </p>
+    <div class="error-buttons">
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('dashboard') }}" class="error-btn error-btn-primary">Go to Dashboard</a>
+            <a href="{{ url_for('manage_categories') }}" class="error-btn error-btn-secondary">Manage Categories</a>
+        {% else %}
+            <a href="{{ url_for('index') }}" class="error-btn error-btn-primary">Go to Home</a>
+            <a href="{{ url_for('login') }}" class="error-btn error-btn-secondary">Login</a>
+        {% endif %}
+    </div>
 
-        <div class="error-actions">
-            {% if current_user.is_authenticated %}
-                <button class="cta-button" onclick="window.location.href='{{ url_for('dashboard') }}'">
-                    Go to Dashboard
-                </button>
-            {% else %}
-                <button class="cta-button" onclick="window.location.href='{{ url_for('index') }}'">
-                    Go to Home
-                </button>
-            {% endif %}
-            <button class="cta-button secondary" onclick="window.history.back()">
-                Go Back
-            </button>
-        </div>
-
-        <div class="error-suggestions">
-            <h3>You might want to:</h3>
-            <ul>
-                {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('dashboard') }}">View your Dashboard</a></li>
-                    <li><a href="{{ url_for('manage_categories') }}">Manage Categories</a></li>
-                {% else %}
-                    <li><a href="{{ url_for('index') }}">Return to Homepage</a></li>
-                    <li><a href="{{ url_for('login') }}">Login to your account</a></li>
-                    <li><a href="{{ url_for('register') }}">Create a new account</a></li>
-                {% endif %}
-            </ul>
-        </div>
+    <div class="error-info-card">
+        <h3>📌 Quick Links</h3>
+        {% if current_user.is_authenticated %}
+            <p>• Track your income and expenses</p>
+            <p>• View financial analytics</p>
+            <p>• Manage your budget effectively</p>
+        {% else %}
+            <p>• Sign up for free account</p>
+            <p>• Track your finances securely</p>
+            <p>• Access from any device</p>
+        {% endif %}
     </div>
 </div>
 
 <style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+
     .error-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 80px);
         text-align: center;
-        max-width: 600px;
-        margin: 0 auto;
         padding: 2rem;
+        color: white;
+    }
+
+    .error-icon {
+        font-size: 5rem;
+        margin-bottom: 1rem;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-20px);
+        }
     }
 
     .error-code {
         font-size: 8rem;
         font-weight: bold;
-        color: #667eea;
         margin: 0;
         line-height: 1;
-        text-shadow: 3px 3px 10px rgba(102, 126, 234, 0.3);
-    }
-
-    .error-title {
-        font-size: 2.5rem;
-        color: #333;
-        margin: 1rem 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .error-message {
-        font-size: 1.2rem;
-        color: #666;
-        margin: 1.5rem 0;
+        font-size: 2rem;
+        margin: 1rem 0;
+        font-weight: 500;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .error-description {
+        font-size: 1.3rem;
+        margin: 1rem 0 2rem;
+        opacity: 0.9;
+        max-width: 600px;
         line-height: 1.6;
     }
 
-    .error-actions {
+    .error-buttons {
         display: flex;
         gap: 1rem;
-        justify-content: center;
         flex-wrap: wrap;
-        margin: 2rem 0;
+        justify-content: center;
+        margin-top: 1rem;
     }
 
-    .cta-button.secondary {
-        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-    }
-
-    .cta-button.secondary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
-    }
-
-    .error-suggestions {
-        margin-top: 3rem;
-        text-align: left;
-        background: rgba(255, 255, 255, 0.5);
-        padding: 1.5rem;
-        border-radius: 10px;
-        backdrop-filter: blur(10px);
-    }
-
-    .error-suggestions h3 {
-        color: #667eea;
-        margin-bottom: 1rem;
-    }
-
-    .error-suggestions ul {
-        list-style: none;
-        padding: 0;
-    }
-
-    .error-suggestions li {
-        margin: 0.5rem 0;
-    }
-
-    .error-suggestions a {
-        color: #667eea;
+    .error-btn {
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
         text-decoration: none;
+        display: inline-block;
         font-weight: 500;
-        transition: color 0.3s;
     }
 
-    .error-suggestions a:hover {
-        color: #764ba2;
-        text-decoration: underline;
+    .error-btn-primary {
+        background: #4caf50;
+        color: white;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    }
+
+    .error-btn-primary:hover {
+        background: #45a049;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    }
+
+    .error-btn-secondary {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .error-btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+    }
+
+    .error-info-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin-top: 3rem;
+        max-width: 500px;
+    }
+
+    .error-info-card h3 {
+        margin-top: 0;
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .error-info-card p {
+        font-size: 1rem;
+        margin: 0.5rem 0;
+        opacity: 0.9;
     }
 
     @media (max-width: 768px) {
@@ -130,22 +160,26 @@
             font-size: 5rem;
         }
 
-        .error-title {
-            font-size: 2rem;
-        }
-
         .error-message {
-            font-size: 1rem;
+            font-size: 1.5rem;
         }
 
-        .error-actions {
+        .error-description {
+            font-size: 1.1rem;
+        }
+
+        .error-buttons {
             flex-direction: column;
-            align-items: center;
-        }
-
-        .cta-button {
             width: 100%;
             max-width: 300px;
+        }
+
+        .error-btn {
+            width: 100%;
+        }
+
+        .error-icon {
+            font-size: 4rem;
         }
     }
 </style>
