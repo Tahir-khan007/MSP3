@@ -154,6 +154,7 @@ The design focuses on usability, clarity, and modern aesthetics with smooth anim
 - **⌨️ Keyboard Shortcuts**: ESC key closes modals, click outside to dismiss
 - **☁️ Cloud Database**: PostgreSQL storage accessible from any device
 - **🎨 Modern UI/UX**: Glassmorphic cards, gradient backgrounds, smooth transitions
+- **⚠️ Custom Error Pages**: User-friendly 404 and 500 error pages with navigation options
 
 ### Future Features
 
@@ -297,10 +298,6 @@ Visit `http://127.0.0.1:5001` in your browser.
 
 ## Deployment
 
-### Live Demo
-
-The application is deployed and accessible at: [Finance Tracker Demo](https://msp3.up.railway.app/)
-
 ### Railway.app Deployment (Recommended)
 
 This project is configured for easy deployment on Railway.app with automatic PostgreSQL provisioning.
@@ -438,6 +435,124 @@ DEBUG=False
 - ✅ SQL injection prevention via ORM
 - ✅ Password hashing (not stored as plain text)
 - ✅ Unauthorized access prevention
+
+#### Error Handling Testing
+- ✅ 404 error page displays for non-existent routes
+- ✅ 404 page shows appropriate navigation options (Dashboard/Home)
+- ✅ 404 page maintains navbar and site styling
+- ✅ 500 error page displays for server errors
+- ✅ 500 page includes helpful troubleshooting suggestions
+- ✅ Error pages are responsive on all devices
+- ✅ Error pages provide "Go Back" functionality
+
+### User Stories Testing
+
+This section demonstrates thorough testing of all user stories documented in the UX section.
+
+#### User Story 1: Understanding the Application
+**Test Case**: First-time user visits homepage to understand the application purpose
+- **Steps**: Navigate to homepage (/)
+- **Expected Result**: Clear hero section with application description and call-to-action buttons
+- **Actual Result**: Homepage displays purple gradient hero with "Track Your Finances with Ease" heading, feature description, and "Get Started" button
+- **Status**: ✅ PASS
+
+#### User Story 2: Account Creation
+**Test Case**: New user creates an account
+- **Steps**: Click "Get Started" → Fill registration form → Submit
+- **Expected Result**: Account created, auto-login, redirect to dashboard with success message
+- **Actual Result**: User successfully registered, automatically logged in, redirected to dashboard with "Registration successful! Welcome to Finance Tracker." message
+- **Status**: ✅ PASS
+
+#### User Story 3: Adding Categories
+**Test Case**: User creates custom categories for transaction organization
+- **Steps**: Navigate to Categories page → Click "Add Category" → Enter name → Submit
+- **Expected Result**: Category created and appears in list immediately
+- **Actual Result**: Modal opens, category added successfully, appears in categories table with transaction count of 0
+- **Status**: ✅ PASS
+
+#### User Story 4: Dashboard Overview
+**Test Case**: User views financial summary on dashboard
+- **Steps**: Login → Navigate to dashboard
+- **Expected Result**: Display total balance, income, expenses, pie chart, and transactions table
+- **Actual Result**: Dashboard shows all financial metrics at top, interactive Chart.js pie chart, and complete transactions table with color-coded entries
+- **Status**: ✅ PASS
+
+#### User Story 5: Adding First Transaction
+**Test Case**: User adds their first income or expense transaction
+- **Steps**: Click "Add Transaction" → Fill form (category, description, amount, type, date) → Submit
+- **Expected Result**: Transaction saved, appears in table, statistics update
+- **Actual Result**: Modal opens with form, transaction added successfully, table updates immediately, balance recalculated automatically
+- **Status**: ✅ PASS
+
+#### User Story 6: Viewing Recent Transactions
+**Test Case**: Returning user reviews transaction history
+- **Steps**: Login → View dashboard transactions table
+- **Expected Result**: All transactions displayed with category, description, amount, type, and date
+- **Actual Result**: Table displays all transactions sorted by date (newest first), color-coded by type (green for income, red for expense)
+- **Status**: ✅ PASS
+
+#### User Story 7: Filtering Transactions
+**Test Case**: User filters transactions by type and category
+- **Steps**: Use filter dropdowns → Select type (All/Income/Expense) → Select category
+- **Expected Result**: Table updates to show only matching transactions, statistics recalculate
+- **Actual Result**: Filters work correctly, can combine type and category filters, URL updates with query params, statistics reflect filtered data
+- **Status**: ✅ PASS
+
+#### User Story 8: Editing Transactions
+**Test Case**: User corrects a transaction mistake
+- **Steps**: Click edit icon on transaction → Modify fields in modal → Submit
+- **Expected Result**: Transaction updated, changes reflected immediately
+- **Actual Result**: Edit modal opens with pre-filled data, changes saved successfully, table and statistics update without page reload
+- **Status**: ✅ PASS
+
+#### User Story 9: Visual Financial Data
+**Test Case**: User views pie chart for spending analysis
+- **Steps**: View dashboard with transactions
+- **Expected Result**: Interactive pie chart showing income vs expenses ratio
+- **Actual Result**: Chart.js pie chart displays with green (income) and red (expenses) sections, shows percentages and amounts on hover
+- **Status**: ✅ PASS
+
+#### User Story 10: Managing Categories Safely
+**Test Case**: User attempts to delete category with linked transactions
+- **Steps**: Try to delete category that has transactions
+- **Expected Result**: Deletion prevented with warning message, lock icon displayed
+- **Actual Result**: Lock icon (🔒) shown next to category name, delete attempt shows error: "Cannot delete category - it has X transaction(s) linked to it"
+- **Status**: ✅ PASS
+
+### CRUD Operations Testing
+
+This section verifies all Create, Read, Update, Delete operations function correctly.
+
+#### Transactions CRUD
+| Operation | Endpoint | Test | Result |
+|-----------|----------|------|--------|
+| **Create** | `POST /transaction/add` | Add new transaction with valid data | ✅ Transaction created, appears in dashboard |
+| **Create** | `POST /transaction/add` | Add transaction without category | ✅ Redirects to category management with warning |
+| **Create** | `POST /transaction/add` | Add transaction with missing fields | ✅ Validation error, flash message displayed |
+| **Read** | `GET /dashboard` | View all user transactions | ✅ All transactions displayed correctly |
+| **Read** | `GET /dashboard?filter=income` | Filter by income type | ✅ Only income transactions shown |
+| **Read** | `GET /dashboard?category=1` | Filter by category | ✅ Only transactions from selected category shown |
+| **Update** | `POST /transaction/edit/<id>` | Edit transaction with valid data | ✅ Transaction updated successfully |
+| **Delete** | `POST /transaction/delete/<id>` | Delete own transaction | ✅ Transaction removed from database |
+
+#### Categories CRUD
+| Operation | Endpoint | Test | Result |
+|-----------|----------|------|--------|
+| **Create** | `POST /category/add` | Add new category | ✅ Category created and listed |
+| **Create** | `POST /category/add` | Add duplicate category name | ✅ Prevented with warning message |
+| **Read** | `GET /categories` | View all user categories | ✅ Categories displayed with transaction counts |
+| **Update** | `POST /category/edit/<id>` | Edit category name | ✅ Category updated successfully |
+| **Delete** | `POST /category/delete/<id>` | Delete empty category | ✅ Category removed successfully |
+| **Delete** | `POST /category/delete/<id>` | Delete category with transactions | ✅ Prevented with error message and transaction count |
+
+#### Users CRUD
+| Operation | Endpoint | Test | Result |
+|-----------|----------|------|--------|
+| **Create** | `POST /register` | Register with valid data | ✅ User created, password hashed, auto-login |
+| **Create** | `POST /register` | Register with existing email | ✅ Validation error shown |
+| **Read** | `@login_required` routes | Access user data | ✅ Only own data accessible |
+| **Update** | N/A | Update profile | ⚠️ Not implemented (future feature) |
+| **Delete** | N/A | Delete account | ⚠️ Not implemented (future feature) |
 
 ### Code Validation
 
